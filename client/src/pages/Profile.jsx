@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteUserFailure, deleteUserStart, deleteUserSuccess, signInSuccess, signoutUserFailure, signoutUserStart, signoutUserSuccess } from '../redux/user/userSlice';
 import { updateUserStart , updateUserSuccess, updateUserFailure} from '../redux/user/userSlice';
+import {Link} from 'react-router-dom';
 
 export default function Profile() {
   const fileRef = useRef(null);
@@ -177,6 +178,7 @@ try {
         >
           {loading ? 'Loading...' : 'Update'}
         </button>
+        <Link className='text-white p-3 rounded-lg text-center bg-green-600 uppercase hover:opacity-85' to={'/create-listing'}>Create Listing</Link>
       </form>
 
       <div className="flex justify-between mt-5">

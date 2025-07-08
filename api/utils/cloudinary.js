@@ -1,31 +1,22 @@
 import dotenv from 'dotenv';
-
-// 👇 add path to the actual env file
-dotenv.config({ path: './api/.env' });
-
-
+dotenv.config({ path: './api/.env' }); // Ensure this matches your actual .env location
 
 import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
-
-//console.log("🔍 Cloudinary Env:", {
- // name: process.env.CLOUDINARY_CLOUD_NAME,
- // key: process.env.CLOUDINARY_API_KEY,
- // secret: process.env.CLOUDINARY_API_SECRET ? '✅ LOADED' : '❌ MISSING',
-//});
-
+// Setup cloudinary config
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+// Setup multer-cloudinary storage
 export const storage = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: 'real-estate',
-    allowed_formats: ['jpg', 'png', 'jpeg'],
+    allowed_formats: ['jpg', 'jpeg', 'png'],
   },
 });
 

@@ -266,7 +266,7 @@ export default function CreateListing() {
               type="button"
               onClick={handleImageSubmit}
               disabled={uploading}
-              className="p-3 border rounded text-black border-gray-600 hover:shadow-lg disabled:opacity-80"
+              className="p-3 border rounded text-green-600 border-green-600 hover:shadow-lg disabled:opacity-80"
             >
               {uploading ? "Uploading..." : "Upload"}
             </button>

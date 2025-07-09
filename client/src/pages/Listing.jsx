@@ -3,11 +3,18 @@ import { useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
 import { Navigation } from "swiper/modules";
-import { FaMapMarkerAlt, FaShare, FaBath, FaBed, FaParking, FaChair } from 'react-icons/fa';
+import {
+  FaMapMarkerAlt,
+  FaShare,
+  FaBath,
+  FaBed,
+  FaParking,
+  FaChair,
+} from "react-icons/fa";
 import { useSelector } from "react-redux";
 
 import "swiper/css/bundle";
-import { current } from "@reduxjs/toolkit";
+import Contact from "../components/Contact";
 
 export default function Listing() {
   SwiperCore.use([Navigation]);
@@ -16,9 +23,9 @@ export default function Listing() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [ contact ,setContact] = useState(false);
+  const [contact, setContact] = useState(false);
   const params = useParams();
-  const {currentUser} = useSelector((state) => state.user);
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -42,10 +49,10 @@ export default function Listing() {
     fetchListing();
   }, [params.listingId]);
 
-  console.log("listing.userRef:", listing?.userRef);
-console.log("currentUser._id:", currentUser?._id);
-console.log("Check:", String(listing?.userRef) !== String(currentUser?._id));
-
+  const listingOwnerId =
+    typeof listing?.userRef === "object"
+      ? listing.userRef._id
+      : listing?.userRef;
 
   return (
     <main>
@@ -115,38 +122,41 @@ console.log("Check:", String(listing?.userRef) !== String(currentUser?._id));
               {listing.description}
             </p>
             <ul className="text-green-900 font-semibold text-sm flex flex-wrap items-center gap-4 sm:gap-6">
-                <li className="flex items-center gap-1 whitespace-nowrap">
-                    <FaBed className="text-lg"/>
-                    {
-                        listing.bedrooms > 1 ? `${listing.bedrooms} beds` : `${listing.bedrooms} bed`
-                    }
-                </li>
-                <li className="flex items-center gap-1 whitespace-nowrap">
-                    <FaBath className="text-lg"/>
-                    {
-                        listing.bathrooms > 1 ? `${listing.bathrooms} baths` : `${listing.bathrooms} bath`
-                    }
-                </li>
-                <li className="flex items-center gap-1 whitespace-nowrap">
-                    <FaParking className="text-lg"/>
-                    {
-                       listing.parking ? 'Parking Spot' : 'No Parking'
-                    }
-                </li>
-                <li className="flex items-center gap-1 whitespace-nowrap">
-                    <FaChair className="text-lg"/>
-                    {
-                       listing.furnished ? 'Furnished' : 'Unfurnished'
-                    }
-                </li>
+              <li className="flex items-center gap-1 whitespace-nowrap">
+                <FaBed className="text-lg" />
+                {listing.bedrooms > 1
+                  ? `${listing.bedrooms} beds`
+                  : `${listing.bedrooms} bed`}
+              </li>
+              <li className="flex items-center gap-1 whitespace-nowrap">
+                <FaBath className="text-lg" />
+                {listing.bathrooms > 1
+                  ? `${listing.bathrooms} baths`
+                  : `${listing.bathrooms} bath`}
+              </li>
+              <li className="flex items-center gap-1 whitespace-nowrap">
+                <FaParking className="text-lg" />
+                {listing.parking ? "Parking Spot" : "No Parking"}
+              </li>
+              <li className="flex items-center gap-1 whitespace-nowrap">
+                <FaChair className="text-lg" />
+                {listing.furnished ? "Furnished" : "Unfurnished"}
+              </li>
             </ul>
-           {currentUser && String(listing.userRef) !== String(currentUser._id) && !contact && (
-  <button onClick={() => setContact(true)} className="bg-slate-700 text-white rounded-lg uppercase hover:opacity-85 p-3">
-    Contact Landlord
-  </button>
-)}
 
-           {contact && <Contact listing={listing}/>}
+            {currentUser &&
+              listingOwnerId &&
+              String(listingOwnerId) !== String(currentUser._id) &&
+              !contact && (
+                <button
+                  onClick={() => setContact(true)}
+                  className="bg-slate-700 text-white rounded-lg uppercase hover:opacity-85 p-3"
+                >
+                  Contact Landlord
+                </button>
+              )}
+
+            {contact && <Contact listing={listing} />}
           </div>
         </div>
       )}

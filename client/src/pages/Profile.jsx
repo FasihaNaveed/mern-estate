@@ -228,13 +228,13 @@ export default function Profile() {
 
       <div className="flex justify-between mt-5">
         <span onClick={handleDeleteUser} className="text-red-700 cursor-pointer">Delete Account</span>
-        <span onClick={handleSignOut} className="text-blue-700 cursor-pointer">Sign Out</span>
+        <span onClick={handleSignOut} className="text-red-700 cursor-pointer">Sign Out</span>
       </div>
 
       <p className="text-red-700 mt-5">{error ? error : ''}</p>
       <p className="text-green-600 font-bold mt-5">{updateSuccess ? 'User updated successfully!' : ''}</p>
 
-      <button onClick={handleShowListings} className="text-purple-800 w-full mt-4 text-xl font-semibold">
+      <button onClick={handleShowListings} className="text-green-700 w-full mt-4 text-xl font-semibold">
         Show Listings
       </button>
       <p className="text-red-700 mt-2">{showListingsError ? 'Error showing listings' : ''}</p>
@@ -252,7 +252,7 @@ export default function Profile() {
                   className="h-16 w-16 object-contain rounded-lg"
                 />
               </Link>
-              <Link to={`/listing/${listing._id}`} className="text-blue-700 font-semibold flex-1 hover:underline truncate">
+              <Link to={`/listing/${listing._id}`} className="text-slate-700 font-semibold flex-1 hover:underline truncate">
                 <p>{listing.name}</p>
               </Link>
               <div className="flex flex-col items-center gap-1">

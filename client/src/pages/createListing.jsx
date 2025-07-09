@@ -99,11 +99,8 @@ export default function CreateListing() {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: 'include',
-        body: JSON.stringify({
-          ...formData,
-          userRef: currentUser._id,
-        }),
+        credentials: "include", // Include cookies for authentication
+        body: JSON.stringify(formData), // ✅ userRef removed, handled in backend
       });
 
       const data = await res.json();
@@ -131,6 +128,7 @@ export default function CreateListing() {
       </h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
+        {/* Left section */}
         <div className="flex flex-col gap-4 flex-1">
           <input
             type="text"
@@ -249,6 +247,7 @@ export default function CreateListing() {
           </div>
         </div>
 
+        {/* Right section */}
         <div className="flex flex-col flex-1 gap-4">
           <p className="font-semibold text-black">
             Images:

@@ -347,7 +347,7 @@ setImageUrls(data.imageUrls || []);
             </div>
           )}
          
-          <button disabled={loading || uploading} className="p-3 bg-gray-600 text-white rounded-lg uppercase hover:opacity-85 disabled:opacity-70">
+          <button disabled={loading || uploading} className="p-3 bg-slate-600 text-white rounded-lg uppercase hover:opacity-85 disabled:opacity-70">
             {loading ? "Updating..." : "Update listing"}
           </button>
           {err && <p className="text-red-700 text-sm">{err}</p>}

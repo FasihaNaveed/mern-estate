@@ -30,11 +30,13 @@ export const signin = async (req, res, next) => {
     res
       .cookie('access_token', token, {
         httpOnly: true,
-        secure: false, // true in production with HTTPS
-        sameSite: 'Lax', // important for cross-origin cookie (port 5173 <-> 3000)
+        secure: false,
+        sameSite: 'Lax',
+        path: '/',
       })
       .status(200)
-      .json(rest);
+      .json({ _id: validUser._id, username: validUser.username, email: validUser.email });
+
   } catch (error) {
     next(error);
   }
@@ -52,6 +54,7 @@ export const google = async (req, res, next) => {
       httpOnly: true,
       secure: false,
       sameSite: 'Lax',
+      path: '/',
     };
 
     if (user) {
@@ -77,14 +80,15 @@ export const google = async (req, res, next) => {
       await newUser.save();
       const token = jwt.sign(tokenPayload(newUser), process.env.JWT_SECRET);
       const { password: pass, ...rest } = newUser._doc;
-res
-  .cookie('access_token', token, {
-    httpOnly: true,
-    sameSite: 'Lax', // Add this
-    secure: false,   // Set to true if you deploy on HTTPS
-  })
-  .status(200)
-  .json(rest);
+      res
+        .cookie('access_token', token, {
+          httpOnly: true,
+          sameSite: 'Lax',
+          secure: false,
+          path: '/',
+        })
+        .status(200)
+        .json(rest);
     }
   } catch (error) {
     next(error);
@@ -93,9 +97,9 @@ res
 
 export const signout = async (req , res , next)=>{
   try {
-    res.clearCookie('access_token');
+    res.clearCookie('access_token', { path: '/' });
     res.status(200).json('User has been logged out!');
   } catch (error) {
     next(error);
   }
-}
+};

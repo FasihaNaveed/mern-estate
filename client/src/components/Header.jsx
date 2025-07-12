@@ -28,37 +28,43 @@ export default function Header() {
 
   return (
     <header className='bg-slate-200 shadow-md sticky top-0 z-50'>
-      <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center max-w-6xl mx-auto gap-4 py-4 px-6 sm:py-5 sm:px-8'>
+      <div className='flex items-center justify-between max-w-6xl mx-auto py-4 px-4 sm:px-8 gap-2'>
         {/* Logo */}
         <Link to='/'>
-          <h1 className='font-bold text-xl sm:text-2xl flex flex-wrap'>
+          <h1 className='font-bold text-lg sm:text-2xl flex flex-wrap'>
             <span className='text-slate-500'>Fasiha</span>
             <span className='text-slate-700'>Estate</span>
           </h1>
         </Link>
 
         {/* Search */}
-        <form onSubmit={handleSubmit} className="bg-slate-100 p-2 rounded-lg flex items-center">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-slate-100 p-1.5 sm:p-2 rounded-lg flex items-center flex-grow mx-2 max-w-xs"
+        >
           <input
             type="text"
             placeholder='Search...'
-            className='bg-transparent focus:outline-none w-40 sm:w-64 text-sm sm:text-base'
+            className='bg-transparent focus:outline-none w-full text-sm sm:text-base px-1'
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <button>
+          <button type="submit">
             <FaSearch className='text-slate-600' />
           </button>
         </form>
 
+        {/* Menu button (mobile) */}
+        <div className='sm:hidden'>
+          <button onClick={() => setMenuOpen(!menuOpen)}>
+            {menuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+          </button>
+        </div>
+
         {/* Desktop nav */}
         <ul className='hidden sm:flex gap-4 items-center'>
-          <Link to='/'>
-            <li className='text-slate-700 hover:underline'>Home</li>
-          </Link>
-          <Link to='/about'>
-            <li className='text-slate-700 hover:underline'>About</li>
-          </Link>
+          <Link to='/'><li className='text-slate-700 hover:underline'>Home</li></Link>
+          <Link to='/about'><li className='text-slate-700 hover:underline'>About</li></Link>
           <Link to='/profile'>
             {currentUser ? (
               <img
@@ -71,13 +77,6 @@ export default function Header() {
             )}
           </Link>
         </ul>
-
-        {/* Mobile menu button */}
-        <div className='sm:hidden'>
-          <button onClick={() => setMenuOpen(!menuOpen)}>
-            {menuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
-          </button>
-        </div>
       </div>
 
       {/* Mobile menu dropdown */}

@@ -28,9 +28,10 @@ export default function Header() {
 
   return (
     <header className='bg-slate-200 shadow-md sticky top-0 z-50'>
-      <div className='flex items-center justify-between max-w-6xl mx-auto py-4 px-4 sm:px-8 gap-2'>
+      <div className='flex items-center justify-between max-w-6xl mx-auto py-4 px-4 sm:px-8 gap-3'>
+
         {/* Logo */}
-        <Link to='/'>
+        <Link to='/' className='shrink-0 w-[90px]'>
           <h1 className='font-bold text-lg sm:text-2xl flex flex-wrap'>
             <span className='text-slate-500'>Fasiha</span>
             <span className='text-slate-700'>Estate</span>
@@ -40,7 +41,7 @@ export default function Header() {
         {/* Search */}
         <form
           onSubmit={handleSubmit}
-          className="bg-slate-100 p-1.5 sm:p-2 rounded-lg flex items-center flex-grow mx-2 max-w-xs"
+          className="bg-slate-100 p-1.5 sm:p-2 rounded-lg flex items-center flex-1 mx-2"
         >
           <input
             type="text"
@@ -54,8 +55,8 @@ export default function Header() {
           </button>
         </form>
 
-        {/* Menu button (mobile) */}
-        <div className='sm:hidden'>
+        {/* Mobile menu button */}
+        <div className='sm:hidden shrink-0 w-[32px] text-right'>
           <button onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
           </button>

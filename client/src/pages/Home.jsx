@@ -74,23 +74,28 @@ export default function Home() {
       </div>
 
       {/* swiper */}
-      <div className='w-full'>
-        <Swiper navigation loop={true} spaceBetween={0} slidesPerView={1}>
-          {offerListings &&
-            offerListings.length > 0 &&
-            offerListings.map((listing) => (
-              <SwiperSlide key={listing._id}>
-                <div className='w-full h-[500px]'>
-                  <img
-                    src={listing.imageUrls[0]}
-                    alt='listing'
-                    className='w-full h-full object-cover'
-                  />
-                </div>
-              </SwiperSlide>
-            ))}
-        </Swiper>
-      </div>
+<div className='w-full'>
+  <Swiper
+    navigation
+    loop={offerListings.length > 1}
+    spaceBetween={0}
+    slidesPerView={1}
+  >
+    {offerListings &&
+      offerListings.length > 0 &&
+      offerListings.map((listing) => (
+        <SwiperSlide key={listing._id}>
+          <div className='w-full h-[500px]'>
+            <img
+              src={listing.imageUrls[0]}
+              alt='listing'
+              className='w-full h-full object-cover'
+            />
+          </div>
+        </SwiperSlide>
+      ))}
+  </Swiper>
+</div>
 
       {/* listing results for offer, sale and rent */}
       <div className='max-w-6xl mx-auto p-3 flex flex-col gap-8 my-10'>

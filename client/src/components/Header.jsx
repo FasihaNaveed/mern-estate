@@ -15,7 +15,7 @@ export default function Header() {
     urlParams.set('searchTerm', searchTerm);
     const searchQuery = urlParams.toString();
     navigate(`/search?${searchQuery}`);
-    setMenuOpen(false); // close menu on mobile
+    setMenuOpen(false);
   };
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export default function Header() {
 
   return (
     <header className='bg-slate-200 shadow-md sticky top-0 z-50'>
-      <div className='flex justify-between items-center max-w-6xl mx-auto py-4 px-6 sm:py-5 sm:px-8'>
+      <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center max-w-6xl mx-auto gap-4 py-4 px-6 sm:py-5 sm:px-8'>
         {/* Logo */}
         <Link to='/'>
           <h1 className='font-bold text-xl sm:text-2xl flex flex-wrap'>
@@ -82,7 +82,7 @@ export default function Header() {
 
       {/* Mobile menu dropdown */}
       {menuOpen && (
-        <div className="sm:hidden bg-slate-100 p-4 space-y-3 text-slate-700 font-medium text-sm">
+        <div className="sm:hidden bg-slate-100 p-4 mt-2 space-y-3 text-slate-700 font-medium text-sm">
           <Link to="/" onClick={() => setMenuOpen(false)}>
             <div className="hover:underline">Home</div>
           </Link>

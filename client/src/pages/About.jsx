@@ -18,7 +18,7 @@ export default function About() {
       </h1>
 
       <p className='mb-4 text-slate-700' data-aos="fade-up">
-        Fasiha Estate is a leading real estate agency that specializes in helping clients buy, sell, and rent properties in the most desirable neighborhoods. Our team of experienced agents is dedicated to providing exceptional service and making the buying and selling process as smooth as possible.
+        Estate Nest is a leading real estate agency that specializes in helping clients buy, sell, and rent properties in the most desirable neighborhoods. Our team of experienced agents is dedicated to providing exceptional service and making the buying and selling process as smooth as possible.
       </p>
       <p className='mb-4 text-slate-700' data-aos="fade-up" data-aos-delay="100">
         Our mission is to help our clients achieve their real estate goals by providing expert advice, personalized service, and a deep understanding of the local market. Whether you are looking to buy, sell, or rent a property, we are here to help you every step of the way.

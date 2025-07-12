@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { FaSearch, FaBars, FaTimes } from 'react-icons/fa';
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { FaSearch, FaBars, FaTimes } from 'react-icons/fa';
 
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
   const [searchTerm, setSearchTerm] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -27,83 +28,90 @@ export default function Header() {
   }, [location.search]);
 
   return (
-    <header className='bg-slate-200 shadow-md sticky top-0 z-50'>
-      <div className='flex items-center justify-between max-w-6xl mx-auto py-4 px-4 sm:px-8 gap-2'>
-        {/* Logo */}
-        <Link to='/'>
-          <h1 className='font-bold text-lg sm:text-2xl flex flex-wrap'>
-            <span className='text-slate-500'>Fasiha</span>
-            <span className='text-slate-700'>Estate</span>
-          </h1>
-        </Link>
-
-        {/* Search */}
-        <form
-          onSubmit={handleSubmit}
-          className="bg-slate-100 p-1.5 sm:p-2 rounded-lg flex items-center flex-grow mx-2 max-w-xs"
-        >
-          <input
-            type="text"
-            placeholder='Search...'
-            className='bg-transparent focus:outline-none w-full text-sm sm:text-base px-1'
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button type="submit">
-            <FaSearch className='text-slate-600' />
-          </button>
-        </form>
-
-        {/* Menu button (mobile) */}
-        <div className='sm:hidden'>
-          <button onClick={() => setMenuOpen(!menuOpen)}>
-            {menuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
-          </button>
-        </div>
-
-        {/* Desktop nav */}
-        <ul className='hidden sm:flex gap-4 items-center'>
-          <Link to='/'><li className='text-slate-700 hover:underline'>Home</li></Link>
-          <Link to='/about'><li className='text-slate-700 hover:underline'>About</li></Link>
-          <Link to='/profile'>
-            {currentUser ? (
-              <img
-                className='rounded-full h-7 w-7 object-cover'
-                src={currentUser.avatar}
-                alt='profile'
-              />
-            ) : (
-              <li className='text-slate-700 hover:underline'>Sign in</li>
-            )}
+    <header className="bg-slate-200 shadow-md sticky top-0 z-50">
+      <div className="max-w-6xl mx-auto p-3">
+        <div className="flex justify-between items-center flex-wrap gap-3">
+          {/* Logo */}
+          <Link to="/">
+            <h1 className="font-bold text-sm sm:text-xl flex flex-wrap">
+              <span className="text-slate-500">Fasiha</span>
+              <span className="text-slate-700">Estate</span>
+            </h1>
           </Link>
-        </ul>
-      </div>
 
-      {/* Mobile menu dropdown */}
-      {menuOpen && (
-        <div className="sm:hidden bg-slate-100 p-4 mt-2 space-y-3 text-slate-700 font-medium text-sm">
-          <Link to="/" onClick={() => setMenuOpen(false)}>
-            <div className="hover:underline">Home</div>
-          </Link>
-          <Link to="/about" onClick={() => setMenuOpen(false)}>
-            <div className="hover:underline">About</div>
-          </Link>
-          <Link to="/profile" onClick={() => setMenuOpen(false)}>
-            {currentUser ? (
-              <div className="flex items-center gap-2">
+          {/* Search Bar */}
+          <form
+            onSubmit={handleSubmit}
+            className="bg-slate-100 p-2 rounded-lg flex items-center flex-1 sm:flex-initial"
+          >
+            <input
+              type="text"
+              placeholder="Search..."
+              className="bg-transparent focus:outline-none w-full text-sm sm:text-base"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button type="submit">
+              <FaSearch className="text-slate-600" />
+            </button>
+          </form>
+
+          {/* Desktop Menu */}
+          <ul className="hidden sm:flex gap-4 items-center">
+            <Link to="/">
+              <li className="text-slate-700 hover:underline">Home</li>
+            </Link>
+            <Link to="/about">
+              <li className="text-slate-700 hover:underline">About</li>
+            </Link>
+            <Link to="/profile">
+              {currentUser ? (
                 <img
-                  className="h-6 w-6 rounded-full object-cover"
+                  className="rounded-full h-7 w-7 object-cover"
                   src={currentUser.avatar}
                   alt="profile"
                 />
-                <span>Profile</span>
-              </div>
-            ) : (
-              <div className="hover:underline">Sign in</div>
-            )}
-          </Link>
+              ) : (
+                <li className="text-slate-700 hover:underline">Sign In</li>
+              )}
+            </Link>
+          </ul>
+
+          {/* Mobile Menu Icon */}
+          <div className="sm:hidden">
+            <button onClick={() => setMenuOpen(!menuOpen)}>
+              {menuOpen ? (
+                <FaTimes className="text-xl text-slate-700" />
+              ) : (
+                <FaBars className="text-xl text-slate-700" />
+              )}
+            </button>
+          </div>
         </div>
-      )}
+
+        {/* Mobile Dropdown Menu */}
+        {menuOpen && (
+          <div className="sm:hidden mt-3 bg-white shadow-md rounded-md p-4 flex flex-col gap-3 z-10">
+            <Link to="/" onClick={() => setMenuOpen(false)}>
+              <span className="text-slate-700">Home</span>
+            </Link>
+            <Link to="/about" onClick={() => setMenuOpen(false)}>
+              <span className="text-slate-700">About</span>
+            </Link>
+            <Link to="/profile" onClick={() => setMenuOpen(false)}>
+              {currentUser ? (
+                <img
+                  className="rounded-full h-7 w-7 object-cover"
+                  src={currentUser.avatar}
+                  alt="profile"
+                />
+              ) : (
+                <span className="text-slate-700">Sign In</span>
+              )}
+            </Link>
+          </div>
+        )}
+      </div>
     </header>
   );
 }

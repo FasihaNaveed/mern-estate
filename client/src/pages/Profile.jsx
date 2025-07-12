@@ -13,6 +13,7 @@ import {
   updateUserFailure,
 } from '../redux/user/userSlice';
 import { Link } from 'react-router-dom';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function Profile() {
   const fileRef = useRef(null);
@@ -40,7 +41,8 @@ export default function Profile() {
 
     try {
       setUploading(true);
-      const res = await fetch('/api/upload', {
+      const res = await fetch(`${API_BASE_URL}/api/upload`, {
+        credentials: "include",
         method: 'POST',
         body: form,
       });
@@ -70,7 +72,7 @@ export default function Profile() {
     dispatch(updateUserStart());
 
     try {
-      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/user/update/${currentUser._id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -116,7 +118,8 @@ export default function Profile() {
   const handleSignOut = async () => {
     try {
       dispatch(signoutUserStart());
-      const res = await fetch(`/api/auth/signout`);
+      const res = await fetch(`${API_BASE_URL}/api/auth/signout`,
+        { credentials: "include" });
       const data = await res.json();
       if (data.success === false) {
         dispatch(signoutUserFailure(data.message));
@@ -131,7 +134,7 @@ export default function Profile() {
   const handleShowListings = async () => {
     try {
       setShowListingsError(false);
-      const res = await fetch(`/api/user/listings/${currentUser._id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/user/listings/${currentUser._id}`, {
         credentials: 'include',
       });
       const data = await res.json();
@@ -148,7 +151,7 @@ export default function Profile() {
   // NEW: Delete a single listing by its ID
   const handleListingDelete = async (listingId) => {
     try {
-      const res = await fetch(`/api/listing/delete/${listingId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/listing/delete/${listingId}`, {
         method: 'DELETE',
         credentials: 'include',
       });

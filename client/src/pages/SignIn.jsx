@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import OAuth from '../components/OAuth';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 import {
   signInStart,
@@ -24,7 +25,8 @@ export default function SignIn() {
     e.preventDefault();
     try {
       dispatch(signInStart());
-      const res = await fetch('/api/auth/signin', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/signin`, {
+        credentials: 'include',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

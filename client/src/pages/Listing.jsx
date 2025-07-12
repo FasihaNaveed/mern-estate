@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 
 import "swiper/css/bundle";
 import Contact from "../components/Contact";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function Listing() {
   SwiperCore.use([Navigation]);
@@ -31,7 +32,8 @@ export default function Listing() {
     const fetchListing = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/listing/get/${params.listingId}`);
+        const res = await fetch(`${API_BASE_URL}/api/listing/get/${params.listingId}`,
+        { credentials: "include" });
         const data = await res.json();
         if (data.success === false) {
           setError(true);

@@ -25,7 +25,7 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
 
 // ✅ Middleware order
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: 'https://fasiha-estate.netlify.app/',
   credentials: true,
 }));
 app.use(cookieParser());

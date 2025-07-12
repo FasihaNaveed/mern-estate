@@ -11,11 +11,11 @@ export default function Home() {
   const [saleListings, setSaleListings] = useState([]);
   const [rentListings, setRentListings] = useState([]);
   SwiperCore.use([Navigation]);
-  console.log(offerListings);
+
   useEffect(() => {
     const fetchOfferListings = async () => {
       try {
-        const res = await fetch('/api/listing/get?offer=true&limit=4');
+        const res = await fetch('/api/listing/get?offer=true&limit=6');
         const data = await res.json();
         setOfferListings(data);
         fetchRentListings();
@@ -25,7 +25,7 @@ export default function Home() {
     };
     const fetchRentListings = async () => {
       try {
-        const res = await fetch('/api/listing/get?type=rent&limit=4');
+        const res = await fetch('/api/listing/get?type=rent&limit=6');
         const data = await res.json();
         setRentListings(data);
         fetchSaleListings();
@@ -36,15 +36,16 @@ export default function Home() {
 
     const fetchSaleListings = async () => {
       try {
-        const res = await fetch('/api/listing/get?type=sale&limit=4');
+        const res = await fetch('/api/listing/get?type=sale&limit=6');
         const data = await res.json();
         setSaleListings(data);
       } catch (error) {
-        log(error);
+        console.log(error);
       }
     };
     fetchOfferListings();
   }, []);
+
   return (
     <div>
       {/* top */}
@@ -69,28 +70,28 @@ export default function Home() {
       </div>
 
       {/* swiper */}
-      <Swiper navigation>
-        {offerListings &&
-          offerListings.length > 0 &&
-          offerListings.map((listing) => (
-            <SwiperSlide>
-              <div
-                style={{
-                  background: `url(${listing.imageUrls[0]}) center no-repeat`,
-                  backgroundSize: 'cover',
-                }}
-                className='h-[500px]'
-                key={listing._id}
-              ></div>
-            </SwiperSlide>
-          ))}
-      </Swiper>
+      <div className='w-full'>
+        <Swiper navigation loop={true} spaceBetween={0} slidesPerView={1}>
+          {offerListings &&
+            offerListings.length > 0 &&
+            offerListings.map((listing) => (
+              <SwiperSlide key={listing._id}>
+                <div className='w-full h-[500px]'>
+                  <img
+                    src={listing.imageUrls[0]}
+                    alt='listing'
+                    className='w-full h-full object-cover'
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
+        </Swiper>
+      </div>
 
       {/* listing results for offer, sale and rent */}
-
       <div className='max-w-6xl mx-auto p-3 flex flex-col gap-8 my-10'>
         {offerListings && offerListings.length > 0 && (
-          <div className=''>
+          <div>
             <div className='my-3'>
               <h2 className='text-2xl font-semibold text-slate-600'>Recent offers</h2>
               <Link className='text-sm text-blue-800 hover:underline' to={'/search?offer=true'}>Show more offers</Link>
@@ -103,7 +104,7 @@ export default function Home() {
           </div>
         )}
         {rentListings && rentListings.length > 0 && (
-          <div className=''>
+          <div>
             <div className='my-3'>
               <h2 className='text-2xl font-semibold text-slate-600'>Recent places for rent</h2>
               <Link className='text-sm text-blue-800 hover:underline' to={'/search?type=rent'}>Show more places for rent</Link>
@@ -116,7 +117,7 @@ export default function Home() {
           </div>
         )}
         {saleListings && saleListings.length > 0 && (
-          <div className=''>
+          <div>
             <div className='my-3'>
               <h2 className='text-2xl font-semibold text-slate-600'>Recent places for sale</h2>
               <Link className='text-sm text-blue-800 hover:underline' to={'/search?type=sale'}>Show more places for sale</Link>

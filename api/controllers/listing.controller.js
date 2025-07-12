@@ -67,7 +67,7 @@ export const getListing = async (req, res, next) => {
   }
 };
 
-
+// ✅ FINAL FIXED getListings FUNCTION
 export const getListings = async (req, res, next) => {
   try {
     const limit = parseInt(req.query.limit) || 9;
@@ -93,12 +93,14 @@ export const getListings = async (req, res, next) => {
       type = { $in: ['sale', 'rent'] };
     }
 
-    const searchItem = req.query.searchItem || '';
+    // ✅ Use 'searchTerm' instead of 'searchItem'
+    const searchTerm = req.query.searchTerm || '';
+
     const sort = req.query.sort || 'createdAt';
-    const order = req.query.order || 'desc';
+    const order = req.query.order === 'asc' ? 1 : -1;
 
     const listings = await Listing.find({
-      name: { $regex: searchItem, $options: 'i' },
+      name: { $regex: searchTerm, $options: 'i' },
       offer,
       furnished,
       parking,

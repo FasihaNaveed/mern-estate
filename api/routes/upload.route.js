@@ -1,11 +1,12 @@
 import express from 'express';
 import multer from 'multer';
-import { storage } from '../utils/cloudinary.js'; 
+import { storage } from '../utils/cloudinary.js';
+import { verifyToken } from '../utils/verifyUser.js'; // ✅ Import added
 
 const router = express.Router();
 const upload = multer({ storage });
 
-router.post('/', upload.single('image'), (req, res) => {
+router.post('/', verifyToken, upload.single('image'), (req, res) => { // ✅ Middleware added
   try {
     console.log(' Upload route called');
 
@@ -21,7 +22,5 @@ router.post('/', upload.single('image'), (req, res) => {
     res.status(500).json({ error: 'Upload failed', details: err.message });
   }
 });
-
-
 
 export default router;

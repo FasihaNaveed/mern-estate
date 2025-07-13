@@ -15,6 +15,8 @@ import {
 import { Link } from 'react-router-dom';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/dsdsanj9d/upload';
+const CLOUDINARY_UPLOAD_PRESET = 'ml_default'; // 👈 Change this to your unsigned preset name if different
 
 export default function Profile() {
   const fileRef = useRef(null);
@@ -31,29 +33,27 @@ export default function Profile() {
   const [userListings, setUserListings] = useState([]);
 
   useEffect(() => {
-    if (file) {
-      handleImageUpload(file);
-    }
+    if (file) handleImageUpload(file);
   }, [file]);
 
   const handleImageUpload = async (selectedFile) => {
-    const form = new FormData();
-    form.append('image', selectedFile);
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
     try {
       setUploading(true);
-      const res = await fetch(`${API_BASE_URL}/api/upload`, {
-        credentials: 'include',
+      const res = await fetch(CLOUDINARY_UPLOAD_URL, {
         method: 'POST',
-        body: form,
+        body: formData,
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || 'Upload failed');
+      if (!res.ok) throw new Error(data.error?.message || 'Upload failed');
 
-      setAvatar(data.imageUrl);
-      dispatch(signInSuccess({ ...currentUser, avatar: data.imageUrl }));
-      localStorage.setItem('currentUser', JSON.stringify({ ...currentUser, avatar: data.imageUrl }));
+      setAvatar(data.secure_url);
+      dispatch(signInSuccess({ ...currentUser, avatar: data.secure_url }));
+      localStorage.setItem('currentUser', JSON.stringify({ ...currentUser, avatar: data.secure_url }));
 
       setUploadSuccess(true);
       setTimeout(() => setUploadSuccess(false), 3000);
@@ -105,7 +105,7 @@ export default function Profile() {
 
       const data = await res.json();
       if (data.success === false) {
-        dispatch(deleteUserFailure(data.message)); // ✅ FIXED LINE
+        dispatch(deleteUserFailure(data.message));
         return;
       }
 
@@ -168,7 +168,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="p-3 max-w-lg mx-auto relative">
+    <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7 text-black">Profile</h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -235,7 +235,7 @@ export default function Profile() {
         <span onClick={handleSignOut} className="text-red-700 cursor-pointer">Sign Out</span>
       </div>
 
-      <p className="text-red-700 mt-5">{error ? error : ''}</p>
+      <p className="text-red-700 mt-5">{error || ''}</p>
       <p className="text-green-600 font-bold mt-5">{updateSuccess ? 'User updated successfully!' : ''}</p>
 
       <button onClick={handleShowListings} className="text-green-700 w-full mt-4 text-xl font-semibold">
@@ -243,7 +243,7 @@ export default function Profile() {
       </button>
       <p className="text-red-700 mt-2">{showListingsError ? 'Error showing listings' : ''}</p>
 
-      {userListings && userListings.length > 0 && (
+      {userListings.length > 0 && (
         <div className="flex flex-col gap-4 mt-6">
           <h2 className="text-2xl text-center font-semibold">Your Listings</h2>
           {userListings.map((listing) => (

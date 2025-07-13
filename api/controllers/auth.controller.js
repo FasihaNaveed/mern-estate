@@ -30,9 +30,8 @@ export const signin = async (req, res, next) => {
     res
       .cookie('access_token', token, {
         httpOnly: true,
-        secure: false,
-        sameSite: 'Lax',
-        path: '/',
+        secure: true,         // ✅ fixed
+        sameSite: 'None',     // ✅ fixed
       })
       .status(200)
       .json({ _id: validUser._id, username: validUser.username, email: validUser.email });
@@ -46,15 +45,12 @@ export const google = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email });
 
-    const tokenPayload = (u) => ({
-      id: u._id,
-    });
+    const tokenPayload = (u) => ({ id: u._id });
 
     const tokenOptions = {
       httpOnly: true,
-      secure: false,
-      sameSite: 'Lax',
-      path: '/',
+      secure: true,         // ✅ fixed
+      sameSite: 'None',     // ✅ fixed
     };
 
     if (user) {
@@ -81,12 +77,7 @@ export const google = async (req, res, next) => {
       const token = jwt.sign(tokenPayload(newUser), process.env.JWT_SECRET);
       const { password: pass, ...rest } = newUser._doc;
       res
-        .cookie('access_token', token, {
-          httpOnly: true,
-          sameSite: 'Lax',
-          secure: false,
-          path: '/',
-        })
+        .cookie('access_token', token, tokenOptions)
         .status(200)
         .json(rest);
     }
@@ -97,7 +88,7 @@ export const google = async (req, res, next) => {
 
 export const signout = async (req , res , next)=>{
   try {
-    res.clearCookie('access_token', { path: '/' });
+    res.clearCookie('access_token');
     res.status(200).json('User has been logged out!');
   } catch (error) {
     next(error);

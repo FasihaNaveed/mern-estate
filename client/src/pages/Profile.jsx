@@ -13,6 +13,7 @@ import {
   updateUserFailure,
 } from '../redux/user/userSlice';
 import { Link } from 'react-router-dom';
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function Profile() {
@@ -27,7 +28,7 @@ export default function Profile() {
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [formData, setFormData] = useState({});
   const [showListingsError, setShowListingsError] = useState(false);
-  const [userListings, setUserListings] = useState([]); // added state for listings
+  const [userListings, setUserListings] = useState([]);
 
   useEffect(() => {
     if (file) {
@@ -42,7 +43,7 @@ export default function Profile() {
     try {
       setUploading(true);
       const res = await fetch(`${API_BASE_URL}/api/upload`, {
-        credentials: "include",
+        credentials: 'include',
         method: 'POST',
         body: form,
       });
@@ -104,7 +105,7 @@ export default function Profile() {
 
       const data = await res.json();
       if (data.success === false) {
-        dispatch(deleteUserFailure(data.message));
+        dispatch(deleteUserFailure(data.message)); // ✅ FIXED LINE
         return;
       }
 
@@ -118,8 +119,9 @@ export default function Profile() {
   const handleSignOut = async () => {
     try {
       dispatch(signoutUserStart());
-      const res = await fetch(`${API_BASE_URL}/api/auth/signout`,
-        { credentials: "include" });
+      const res = await fetch(`${API_BASE_URL}/api/auth/signout`, {
+        credentials: 'include',
+      });
       const data = await res.json();
       if (data.success === false) {
         dispatch(signoutUserFailure(data.message));
@@ -148,7 +150,6 @@ export default function Profile() {
     }
   };
 
-  // NEW: Delete a single listing by its ID
   const handleListingDelete = async (listingId) => {
     try {
       const res = await fetch(`${API_BASE_URL}/api/listing/delete/${listingId}`, {
@@ -242,7 +243,6 @@ export default function Profile() {
       </button>
       <p className="text-red-700 mt-2">{showListingsError ? 'Error showing listings' : ''}</p>
 
-      {/* Listing Cards with Delete & Edit */}
       {userListings && userListings.length > 0 && (
         <div className="flex flex-col gap-4 mt-6">
           <h2 className="text-2xl text-center font-semibold">Your Listings</h2>

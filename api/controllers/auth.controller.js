@@ -3,10 +3,12 @@ import bcryptjs from 'bcryptjs';
 import { errorHandler } from '../utils/error.js';
 import jwt from 'jsonwebtoken';
 
+// SIGNUP CONTROLLER
 export const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
   const hashedPassword = bcryptjs.hashSync(password, 10);
   const newUser = new User({ username, email, password: hashedPassword });
+
   try {
     await newUser.save();
     res.status(201).json('User created successfully!');
@@ -15,8 +17,10 @@ export const signup = async (req, res, next) => {
   }
 };
 
+// SIGNIN CONTROLLER
 export const signin = async (req, res, next) => {
   const { email, password } = req.body;
+
   try {
     const validUser = await User.findOne({ email });
     if (!validUser) return next(errorHandler(404, 'User not found!'));
@@ -25,43 +29,39 @@ export const signin = async (req, res, next) => {
     if (!validPassword) return next(errorHandler(401, 'Wrong credentials!'));
 
     const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
+
     const { password: pass, ...rest } = validUser._doc;
 
     res
       .cookie('access_token', token, {
         httpOnly: true,
-        secure: false,
-        sameSite: 'Lax',
-        path: '/',
+        secure: true,         // ✅ MUST be true in production
+        sameSite: 'None',     // ✅ Works with cross-site cookies (e.g. Railway + Netlify)
       })
       .status(200)
-      .json({ _id: validUser._id, username: validUser.username, email: validUser.email });
-
+      .json(rest);
   } catch (error) {
     next(error);
   }
 };
 
+// GOOGLE AUTH CONTROLLER
 export const google = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email });
 
-    const tokenPayload = (u) => ({
-      id: u._id,
-    });
-
-    const tokenOptions = {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'Lax',
-      path: '/',
-    };
+    const tokenPayload = (u) => ({ id: u._id });
 
     if (user) {
       const token = jwt.sign(tokenPayload(user), process.env.JWT_SECRET);
       const { password: pass, ...rest } = user._doc;
+
       res
-        .cookie('access_token', token, tokenOptions)
+        .cookie('access_token', token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: 'None',
+        })
         .status(200)
         .json(rest);
     } else {
@@ -69,6 +69,7 @@ export const google = async (req, res, next) => {
         Math.random().toString(36).slice(-8) +
         Math.random().toString(36).slice(-8);
       const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
+
       const newUser = new User({
         username:
           req.body.name.split(' ').join('').toLowerCase() +
@@ -77,15 +78,16 @@ export const google = async (req, res, next) => {
         password: hashedPassword,
         avatar: req.body.photo,
       });
-      await newUser.save();
-      const token = jwt.sign(tokenPayload(newUser), process.env.JWT_SECRET);
-      const { password: pass, ...rest } = newUser._doc;
+
+      const savedUser = await newUser.save();
+      const token = jwt.sign(tokenPayload(savedUser), process.env.JWT_SECRET);
+      const { password: pass, ...rest } = savedUser._doc;
+
       res
         .cookie('access_token', token, {
           httpOnly: true,
-          sameSite: 'Lax',
-          secure: false,
-          path: '/',
+          secure: true,
+          sameSite: 'None',
         })
         .status(200)
         .json(rest);
@@ -95,9 +97,14 @@ export const google = async (req, res, next) => {
   }
 };
 
-export const signout = async (req , res , next)=>{
+// SIGNOUT CONTROLLER
+export const signout = async (req, res, next) => {
   try {
-    res.clearCookie('access_token', { path: '/' });
+    res.clearCookie('access_token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'None',
+    });
     res.status(200).json('User has been logged out!');
   } catch (error) {
     next(error);
